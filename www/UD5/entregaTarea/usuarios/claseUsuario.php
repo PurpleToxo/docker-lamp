@@ -3,12 +3,12 @@
 class user{
 
     //atributos    
-    private $id;
-    private $username;
-    private $name;
-    private $apellidos;
-    private $contrasena;
-    private $rol;
+    private int $id;
+    private string $username;
+    private string $name;
+    private string $apellidos;
+    private string $contrasena;
+    private boolean $rol;
 
     //constructor
     function __constructor($id, $username, $name, $apellidos, $contrasena, $rol){

@@ -2,19 +2,19 @@
 class Tarea{
 
     //atributos
-    private $id;
-    private $titulo;
-    private $descripcion;
-    private $estado;
-    private $usuario;
+    private int $id;
+    private string $titulo;
+    private string $descripcion;
+    private boolean $estado;
+    private $id_usuario;
 
     //constructor
-    function __constructor($id,$titulo,$descripcion,$estado,$usuario){
+    function __constructor($id,$titulo,$descripcion,$estado,$id_usuario){
         $this-> id = $id;
         $this->titulo=$titulo;
         $this->descripcion=$descripcion;
         $this->estado=$estado;
-        $this->usuario=$usuario;
+        $this->id_usuario=$id_usuario;
     }
 
     //setters y getters
@@ -46,11 +46,11 @@ class Tarea{
         return $this->estado;
     }
 
-    function setUsuario($usuario){
-        $this->usuario=$usuario;
+    function setIdUsuario($id_usuario){
+        $this->id_usuario=$id_usuario;
     }
-    function getUsuario(){
-        return $this->usuario;
+    function getIdUsuario(){
+        return $this->id_usuario;
     }
 
 }

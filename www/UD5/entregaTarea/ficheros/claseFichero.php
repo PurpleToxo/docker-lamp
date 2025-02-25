@@ -2,21 +2,21 @@
 class Fichero{
 
     //atributos
-    private $id;
-    private $nombre;
-    private $file;
-    private $descripcion;
-    private $tarea;
-    public $formatos = ['image/jpeg', 'image/png', 'application/pdf'];
-    public $max_size = 20*1024*1024;
+    private int $id;
+    private string $nombre;
+    private string $file;
+    private string $descripcion;
+    private int $id_tarea;
+    public string $formatos = ['image/jpeg', 'image/png', 'application/pdf'];
+    public int $max_size = 20*1024*1024;
 
     //constructor
-    function __constructor($id,$nombre,$file,$descripcion,$tarea){
+    function __constructor($id,$nombre,$file,$descripcion,$id_tarea){
         $this-> id = $id;
         $this->nombre=$nombre;
         $this->file=$file;
         $this->descripcion=$descripcion;
-        $this->tarea=$tarea;
+        $this->id_tarea=$id_tarea;
     }
 
 
@@ -49,11 +49,11 @@ class Fichero{
         return $this->descripcion;
     }
 
-    function setTarea($tarea){
-        $this->tarea=$tarea;
+    function setIdTarea($id_tarea){
+        $this->id_tarea=$id_tarea;
     }
-    function getTarea(){
-        return $this->tarea;
+    function getIdTarea(){
+        return $this->id_tarea;
     }
 
     public static function validar($file,$formatos,$max_size){
