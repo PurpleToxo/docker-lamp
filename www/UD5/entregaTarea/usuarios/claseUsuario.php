@@ -1,7 +1,8 @@
 <?php  
 
 class user{
-    
+
+    //atributos    
     private $id;
     private $username;
     private $name;
@@ -9,6 +10,7 @@ class user{
     private $contrasena;
     private $rol;
 
+    //constructor
     function __constructor($id, $username, $name, $apellidos, $contrasena, $rol){
         $this-> id = $id;
         $this->username = $username;
@@ -18,6 +20,7 @@ class user{
         $this-> rol = $rol;
     }
 
+    //setters y getters
     function setId($id){
         $this-> id = $id;
     }
