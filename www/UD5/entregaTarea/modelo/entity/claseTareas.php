@@ -6,7 +6,7 @@ class Tarea{
     private string $titulo;
     private string $descripcion;
     private boolean $estado;
-    private $id_usuario;
+    private int $id_usuario;
 
     //constructor
     function __constructor($id,$titulo,$descripcion,$estado,$id_usuario){

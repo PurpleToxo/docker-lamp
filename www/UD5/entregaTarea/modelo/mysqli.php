@@ -1,13 +1,11 @@
 <?php
 
-function conecta($host, $user, $pass, $db)
-{
+function conecta($host, $user, $pass, $db){
     $conexion = new mysqli($host, $user, $pass, $db);
     return $conexion;
 }
 
-function conectaTareas()
-{
+function conectaTareas(){
     $host = $_ENV['DATABASE_HOST'];
     $user = $_ENV['DATABASE_USER'];
     $pass = $_ENV['DATABASE_PASSWORD'];
@@ -15,15 +13,13 @@ function conectaTareas()
     return conecta($host, $user, $pass, $name);
 }
 
-function cerrarConexion($conexion)
-{
+function cerrarConexion($conexion) {
     if (isset($conexion) && $conexion->connect_errno === 0) {
         $conexion->close();
     }
 }
 
-function creaDB()
-{
+function creaDB(){
     try {
         $host = $_ENV['DATABASE_HOST'];
         $user = $_ENV['DATABASE_USER'];
@@ -64,8 +60,7 @@ function creaDB()
     }
 }
 
-function createTablaUsuarios()
-{
+function createTablaUsuarios(){
     try {
         $conexion = conectaTareas();
         
@@ -105,8 +100,7 @@ function createTablaUsuarios()
     }
 }
 
-function createTablaTareas()
-{
+function createTablaTareas(){
     try {
         $conexion = conectaTareas();
         
@@ -146,8 +140,7 @@ function createTablaTareas()
     }
 }
 
-function createTablaFicheros()
-{
+function createTablaFicheros(){
     try {
         $conexion = conectaTareas();
         
@@ -187,8 +180,7 @@ function createTablaFicheros()
     }
 }
 
-function listaTareas()
-{
+function listaTareas(){
     try {
         $conexion = conectaTareas();
 
@@ -220,8 +212,7 @@ function listaTareas()
     }
 }
 
-function nuevaTarea($titulo, $descripcion, $estado, $usuario)
-{
+function nuevaTarea($titulo, $descripcion, $estado, $usuario){
     try {
         $conexion = conectaTareas();
         
@@ -249,8 +240,7 @@ function nuevaTarea($titulo, $descripcion, $estado, $usuario)
     }
 }
 
-function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario)
-{
+function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario){
     try {
         $conexion = conectaTareas();
         
@@ -279,8 +269,7 @@ function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario)
     }
 }
 
-function borraTarea($id)
-{
+function borraTarea($id){
     try {
         $conexion = conectaTareas();
 
@@ -312,8 +301,7 @@ function borraTarea($id)
     }
 }
 
-function buscaTarea($id)
-{
+function buscaTarea($id) {
     $conexion = conectaTareas();
 
     if ($conexion->connect_error)
@@ -335,8 +323,7 @@ function buscaTarea($id)
     }
 }
 
-function esPropietarioTarea($idUsuario, $idTarea)
-{
+function esPropietarioTarea($idUsuario, $idTarea) {
     $tarea = buscaTarea($idTarea);
     if ($tarea)
     {
@@ -348,8 +335,7 @@ function esPropietarioTarea($idUsuario, $idTarea)
     }
 }
 
-function buscaUsuarioMysqli($id)
-{
+function buscaUsuarioMysqli($id) {
     $conexion = conectaTareas();
 
     if ($conexion->connect_error)
