@@ -1,6 +1,6 @@
 <?php  
 
-class user{
+class User{
 
     //atributos    
     private int $id;
@@ -11,7 +11,7 @@ class user{
     private boolean $rol;
 
     //constructor
-    function __constructor($id, $username, $name, $apellidos, $contrasena, $rol){
+    function __construct($id, $username, $name, $apellidos, $contrasena, $rol){
         $this-> id = $id;
         $this->username = $username;
         $this->name = $name;

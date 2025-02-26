@@ -11,14 +11,15 @@ class Fichero{
     public int $max_size = 20*1024*1024;
 
     //constructor
-    function __constructor($id,$nombre,$file,$descripcion,$id_tarea){
+    function __construct($id,$nombre,$file,$descripcion,$id_tarea, $formatos, $max_size){
         $this-> id = $id;
         $this->nombre=$nombre;
         $this->file=$file;
         $this->descripcion=$descripcion;
         $this->id_tarea=$id_tarea;
+        $this->formatos=$formatos;
+        $this->max_size=$max_size;
     }
-
 
     //Setters y getters
     function setId($id){
@@ -54,6 +55,20 @@ class Fichero{
     }
     function getIdTarea(){
         return $this->id_tarea;
+    }
+
+    function setFormatos($formatos){
+        $this->formatos=$formatos;
+    }
+    function getFormatos(){
+        return $this->$formatos;
+    }
+
+    function setMaxSize($max_size){
+        $this->max_size=$max_size;
+    }
+    function getMaxSize(){
+        return $this->max_size;
     }
 
     public static function validar($file,$formatos,$max_size){

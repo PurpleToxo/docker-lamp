@@ -9,7 +9,7 @@ class Tarea{
     private int $id_usuario;
 
     //constructor
-    function __constructor($id,$titulo,$descripcion,$estado,$id_usuario){
+    function __construct($id,$titulo,$descripcion,$estado,$id_usuario){
         $this-> id = $id;
         $this->titulo=$titulo;
         $this->descripcion=$descripcion;
