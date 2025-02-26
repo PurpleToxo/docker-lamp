@@ -1,5 +1,7 @@
 <?php 
-class FicheroDBImp{
+require_once 'FicherosDBInt';
+
+class FicheroDBImp implements FicherosDBInt{
 
     
 }
