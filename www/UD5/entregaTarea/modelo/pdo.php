@@ -249,8 +249,10 @@ function listaFicheros($id_tarea){
         }
         return [true, $ficheros];
     }
-    catch (PDOException $e){
-        return array();
+    catch (DatabaseException $e) {
+        echo 'Exception capturada: ', $e->getMessage(), "\n";
+        echo 'Método SQL: ', $e->getMethod(), "\n";
+        echo 'Sentencia SQL: ', $e->getSQL(), "\n";
     }
     finally{
         $con = null;
@@ -277,8 +279,10 @@ function buscaFichero($id){
         }
         return $fichero;
     }
-    catch (PDOException $e){
-        return null;
+    catch (DatabaseException $e) {
+        echo 'Exception capturada: ', $e->getMessage(), "\n";
+        echo 'Método SQL: ', $e->getMethod(), "\n";
+        echo 'Sentencia SQL: ', $e->getSQL(), "\n";
     }
     finally{
         $con = null;
@@ -286,8 +290,7 @@ function buscaFichero($id){
 }
 
 function borraFichero($id){
-    try
-    {
+    try{
         $con = conectaPDO();
         $sql = 'DELETE FROM ficheros WHERE id = ' . $id;
         $stmt = $con->prepare($sql);
@@ -295,12 +298,12 @@ function borraFichero($id){
 
         return true;
     }
-    catch (PDOException $e)
-    {
-        return false;
+    catch (DatabaseException $e) {
+        echo 'Exception capturada: ', $e->getMessage(), "\n";
+        echo 'Método SQL: ', $e->getMethod(), "\n";
+        echo 'Sentencia SQL: ', $e->getSQL(), "\n";
     }
-    finally
-    {
+    finally{
         $con = null;
     }
 }
@@ -319,8 +322,10 @@ function nuevoFichero($fichero){
 
         return [true, null];
     }
-    catch (PDOExcetion $e) {
-        return [false, $e->getMessage()];
+    catch (DatabaseException $e) {
+        echo 'Exception capturada: ', $e->getMessage(), "\n";
+        echo 'Método SQL: ', $e->getMethod(), "\n";
+        echo 'Sentencia SQL: ', $e->getSQL(), "\n";
     }
     finally{
         $con = null;
