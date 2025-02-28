@@ -323,7 +323,15 @@ function buscaUsuarioMysqli($id) {
         $sql = "SELECT id, username, nombre, apellidos, rol, contrasena  FROM usuarios WHERE id = " . $id;
         $resultados = $conexion->query($sql);
         if ($resultados->num_rows == 1){
-            return $resultados->fetch_assoc();
+            $row =$resultados->fetch_assoc();
+            $usuario = new Usuario(
+                $row['id'],
+                $row['username'],
+                $row['nombre'],
+                $row['apellidos'],
+                $row['rol'],
+                $row['contrasena'],
+            );
         }
         else{
             return null;
