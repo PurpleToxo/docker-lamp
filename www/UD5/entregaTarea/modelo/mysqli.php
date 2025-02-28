@@ -26,12 +26,10 @@ function creaDB(){
         $pass = $_ENV['DATABASE_PASSWORD'];
         $conexion = conecta($host, $user, $pass, null);
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error){
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             // Verificar si la base de datos ya existe
             $sqlCheck = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'tareas'";
             $resultado = $conexion->query($sqlCheck);
@@ -40,12 +38,10 @@ function creaDB(){
             }
 
             $sql = 'CREATE DATABASE IF NOT EXISTS tareas';
-            if ($conexion->query($sql))
-            {
+            if ($conexion->query($sql)){
                 return [true, 'Base de datos "tareas" creada correctamente'];
             }
-            else
-            {
+            else{
                 return [false, 'No se pudo crear la base de datos "tareas".'];
             }
         }
@@ -64,28 +60,23 @@ function createTablaUsuarios(){
     try {
         $conexion = conectaTareas();
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error) {
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             // Verificar si la tabla ya existe
             $sqlCheck = "SHOW TABLES LIKE 'usuarios'";
             $resultado = $conexion->query($sqlCheck);
 
-            if ($resultado && $resultado->num_rows > 0)
-            {
+            if ($resultado && $resultado->num_rows > 0) {
                 return [false, 'La tabla "usuarios" ya existía.'];
             }
 
             $sql = 'CREATE TABLE `usuarios` (`id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `rol` INT DEFAULT 0, `nombre` VARCHAR(50) NOT NULL , `apellidos` VARCHAR(100) NOT NULL , `contrasena` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ';
-            if ($conexion->query($sql))
-            {
+            if ($conexion->query($sql)){
                 return [true, 'Tabla "usuarios" creada correctamente'];
             }
-            else
-            {
+            else {
                 return [false, 'No se pudo crear la tabla "usuarios".'];
             }
         }
@@ -104,28 +95,23 @@ function createTablaTareas(){
     try {
         $conexion = conectaTareas();
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error){
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             // Verificar si la tabla ya existe
             $sqlCheck = "SHOW TABLES LIKE 'tareas'";
             $resultado = $conexion->query($sqlCheck);
 
-            if ($resultado && $resultado->num_rows > 0)
-            {
+            if ($resultado && $resultado->num_rows > 0) {
                 return [false, 'La tabla "tareas" ya existía.'];
             }
 
             $sql = 'CREATE TABLE `tareas` (`id` INT NOT NULL AUTO_INCREMENT, `titulo` VARCHAR(50) NOT NULL, `descripcion` VARCHAR(250) NOT NULL, `estado` VARCHAR(50) NOT NULL, `id_usuario` INT NOT NULL, PRIMARY KEY (`id`), FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`))';
-            if ($conexion->query($sql))
-            {
+            if ($conexion->query($sql)) {
                 return [true, 'Tabla "tareas" creada correctamente'];
             }
-            else
-            {
+            else {
                 return [false, 'No se pudo crear la tabla "tareas".'];
             }
         }
@@ -144,28 +130,23 @@ function createTablaFicheros(){
     try {
         $conexion = conectaTareas();
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error){
             return [false, $conexion->error];
         }
-        else
-        {
+        else {
             // Verificar si la tabla ya existe
             $sqlCheck = "SHOW TABLES LIKE 'ficheros'";
             $resultado = $conexion->query($sqlCheck);
 
-            if ($resultado && $resultado->num_rows > 0)
-            {
+            if ($resultado && $resultado->num_rows > 0){
                 return [false, 'La tabla "ficheros" ya existía.'];
             }
 
             $sql = 'CREATE TABLE `ficheros` (`id` INT NOT NULL AUTO_INCREMENT, `nombre` VARCHAR(100) NOT NULL, `file` VARCHAR(250) NOT NULL, `descripcion` VARCHAR(250) NOT NULL, `id_tarea` INT NOT NULL, PRIMARY KEY (`id`), FOREIGN KEY (`id_tarea`) REFERENCES `tareas`(`id`))';
-            if ($conexion->query($sql))
-            {
+            if ($conexion->query($sql)) {
                 return [true, 'Tabla "ficheros" creada correctamente'];
             }
-            else
-            {
+            else{
                 return [false, 'No se pudo crear la tabla "ficheros".'];
             }
         }
@@ -184,20 +165,24 @@ function listaTareas(){
     try {
         $conexion = conectaTareas();
 
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error){
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             $sql = "SELECT * FROM tareas";
             $resultados = $conexion->query($sql);
-            $tareas = array();
-            while ($row = $resultados->fetch_assoc())
-            {
+            $tareas = [];
+            while ($row = $resultados->fetch_assoc()){
                 $usuario = buscaUsuarioMysqli($row['id_usuario']);
                 $row['id_usuario'] = $usuario['username'];
-                array_push($tareas, $row);
+                
+                $tarea = new Tarea(
+                    $row['id'],
+                    $row['titulo'],
+                    $row['descripcion'],
+                    $row['estado'],
+                    $row['id_usuario'],
+                );
             }
             return [true, $tareas];
         }
@@ -206,8 +191,7 @@ function listaTareas(){
     catch (mysqli_sql_exception $e) {
         return [false, $e->getMessage()];
     }
-    finally
-    {
+    finally{
         cerrarConexion($conexion);
     }
 }
@@ -216,12 +200,10 @@ function nuevaTarea($titulo, $descripcion, $estado, $usuario){
     try {
         $conexion = conectaTareas();
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error) {
             return [false, $conexion->error];
         }
-        else
-        {
+        else {
             $stmt = $conexion->prepare("INSERT INTO tareas (titulo, descripcion, estado, id_usuario) VALUES (?,?,?,?)");
             $stmt->bind_param("ssss", $titulo, $descripcion, $estado, $usuario);
 
@@ -230,12 +212,10 @@ function nuevaTarea($titulo, $descripcion, $estado, $usuario){
             return [true, 'Tarea creada correctamente.'];
         }
     }
-    catch (mysqli_sql_exception $e)
-    {
+    catch (mysqli_sql_exception $e){
         return [false, $e->getMessage()];
     }
-    finally
-    {
+    finally {
         cerrarConexion($conexion);
     }
 }
@@ -244,12 +224,10 @@ function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario){
     try {
         $conexion = conectaTareas();
         
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error){
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             $sql = "UPDATE tareas SET titulo = ?, descripcion = ?, estado = ?, id_usuario = ? WHERE id = ?";
             $stmt = $conexion->prepare($sql);
             $stmt->bind_param("sssii", $titulo, $descripcion, $estado, $usuario, $id);
@@ -259,12 +237,10 @@ function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario){
             return [true, 'Tarea actualizada correctamente.'];
         }
     }
-    catch (mysqli_sql_exception $e)
-    {
+    catch (mysqli_sql_exception $e){
         return [false, $e->getMessage()];
     }
-    finally
-    {
+    finally{
         cerrarConexion($conexion);
     }
 }
@@ -273,12 +249,10 @@ function borraTarea($id){
     try {
         $conexion = conectaTareas();
 
-        if ($conexion->connect_error)
-        {
+        if ($conexion->connect_error) {
             return [false, $conexion->error];
         }
-        else
-        {
+        else{
             $sql = "DELETE FROM tareas WHERE id = " . $id;
             if ($conexion->query($sql))
             {
@@ -295,8 +269,7 @@ function borraTarea($id){
     catch (mysqli_sql_exception $e) {
         return [false, $e->getMessage()];
     }
-    finally
-    {
+    finally{
         cerrarConexion($conexion);
     }
 }
@@ -304,20 +277,27 @@ function borraTarea($id){
 function buscaTarea($id) {
     $conexion = conectaTareas();
 
-    if ($conexion->connect_error)
-    {
+    if ($conexion->connect_error) {
         return [false, $conexion->error];
     }
-    else
-    {
+    else{
         $sql = "SELECT * FROM tareas WHERE id = " . $id;
         $resultados = $conexion->query($sql);
-        if ($resultados->num_rows == 1)
-        {
-            return $resultados->fetch_assoc();
+        
+        if ($resultados->num_rows == 1){
+            $row = $resultados->fetch_assoc();
+
+            $tarea = new Tarea(
+                $row['id'],
+                $row['titulo'],
+                $row['descripcion'],
+                $row['estado'],
+                $row['id_usuario'],
+            );
+
+            return [true, $tarea]
         }
-        else
-        {
+        else{
             return null;
         }
     }
@@ -325,12 +305,10 @@ function buscaTarea($id) {
 
 function esPropietarioTarea($idUsuario, $idTarea) {
     $tarea = buscaTarea($idTarea);
-    if ($tarea)
-    {
+    if ($tarea){
         return $tarea['id_usuario'] == $idUsuario;
     }
-    else
-    {
+    else{
         return false;
     }
 }
@@ -338,20 +316,16 @@ function esPropietarioTarea($idUsuario, $idTarea) {
 function buscaUsuarioMysqli($id) {
     $conexion = conectaTareas();
 
-    if ($conexion->connect_error)
-    {
+    if ($conexion->connect_error){
         return [false, $conexion->error];
     }
-    else
-    {
+    else{
         $sql = "SELECT id, username, nombre, apellidos, rol, contrasena  FROM usuarios WHERE id = " . $id;
         $resultados = $conexion->query($sql);
-        if ($resultados->num_rows == 1)
-        {
+        if ($resultados->num_rows == 1){
             return $resultados->fetch_assoc();
         }
-        else
-        {
+        else{
             return null;
         }
     }
