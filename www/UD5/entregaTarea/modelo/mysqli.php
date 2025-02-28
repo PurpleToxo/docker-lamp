@@ -1,4 +1,5 @@
 <?php
+require_once (__DIR__'/entity/claseTarea.php')
 
 function conecta($host, $user, $pass, $db){
     $conexion = new mysqli($host, $user, $pass, $db);
