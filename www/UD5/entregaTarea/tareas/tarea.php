@@ -1,5 +1,9 @@
 <?php
     require_once('../login/sesiones.php');
+    require_once(__DIR__'/modelo/entity/claseFichero.php');
+    require_once(__DIR__'/modelo/entity/claseUsuario.php');
+    require_once(__DIR__'/modelo/mysqli.php');
+
     
     // Función para determinar el tipo de archivo y devolver el icono correspondiente
     function getFileIcon($filename) {
@@ -43,15 +47,8 @@
                         {
                             $tarea = buscaTarea($id);
                             $usuario = buscaUsuarioMysqli($tarea['id_usuario']);
-                            if ($tarea)
-                            {
-                                $titulo = $tarea['titulo'];
-                                $descripcion = $tarea['descripcion'];
-                                $estado = $tarea['estado'];
-                                $id_usuario = $tarea['id_usuario'];
-
-                                require_once('../modelo/pdo.php');
-                                $ficheros = listaFicheros($id);
+                            if ($tarea){
+                                $ficheros = $tarea->getId();                                
                             ?>
 
                             <div class="container my-4">
