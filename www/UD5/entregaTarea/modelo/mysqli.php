@@ -196,7 +196,7 @@ function listaTareas(){
     }
 }
 
-function nuevaTarea($titulo, $descripcion, $estado, $usuario){
+function nuevaTarea($tarea){
     try {
         $conexion = conectaTareas();
         
@@ -205,7 +205,7 @@ function nuevaTarea($titulo, $descripcion, $estado, $usuario){
         }
         else {
             $stmt = $conexion->prepare("INSERT INTO tareas (titulo, descripcion, estado, id_usuario) VALUES (?,?,?,?)");
-            $stmt->bind_param("ssss", $titulo, $descripcion, $estado, $usuario);
+            $stmt->bind_param("ssss", $tarea->titulo, $tarea->descripcion, $tarea->estado, $tarea->usuario);
 
             $stmt->execute();
 
@@ -220,7 +220,7 @@ function nuevaTarea($titulo, $descripcion, $estado, $usuario){
     }
 }
 
-function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario){
+function actualizaTarea($tarea){
     try {
         $conexion = conectaTareas();
         
@@ -230,7 +230,7 @@ function actualizaTarea($id, $titulo, $descripcion, $estado, $usuario){
         else{
             $sql = "UPDATE tareas SET titulo = ?, descripcion = ?, estado = ?, id_usuario = ? WHERE id = ?";
             $stmt = $conexion->prepare($sql);
-            $stmt->bind_param("sssii", $titulo, $descripcion, $estado, $usuario, $id);
+            $stmt->bind_param("sssii", $tarea->titulo, $tarea->descripcion, $tarea->estado, $tarea->usuario, $tarea->id);
 
             $stmt->execute();
 
