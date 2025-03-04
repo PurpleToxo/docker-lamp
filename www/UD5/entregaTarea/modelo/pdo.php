@@ -143,7 +143,7 @@ function actualizaUsuario($usuario){
     }
 }
 
-function borraUsuario($id) {  //Falta por cambiar a objetos
+function borraUsuario($id) {
     try {
         $con = conectaPDO();
 
@@ -155,13 +155,9 @@ function borraUsuario($id) {  //Falta por cambiar a objetos
         $stmt->execute();
         
         return [$con->commit(), ''];
-    }
-    catch (PDOExcetion $e)
-    {
+    }catch (PDOExcetion $e){
         return [false, $e->getMessage()];
-    }
-    finally
-    {
+    }finally{
         $con = null;
     }
 }

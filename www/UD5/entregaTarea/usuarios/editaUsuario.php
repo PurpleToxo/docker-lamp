@@ -1,53 +1,49 @@
 <?php
 require_once('../login/sesiones.php');
+require_once ('../modelo/entity/claseUsuario.php');
 if (!checkAdmin()) redirectIndex();
 
 require_once('../utils.php');
-$id = $_POST['id'];
-$nombre = $_POST['nombre'];
-$apellidos = $_POST['apellidos'];
-$username = $_POST['username'];
-$contrasena = $_POST['contrasena'];
-$rol = $_POST['rol'];
+$usuario = new User();
+
+$usuario->id = $_POST['id'];
+$usuario->nombre = $_POST['nombre'];
+$usuario->apellidos = $_POST['apellidos'];
+$usuario->username = $_POST['username'];
+$usuario->contrasena = $_POST['contrasena'];
+$usuario->rol = $_POST['rol'];
 $error = false;
 
 $message = 'Error creando el usuario.';
 
 //verificar nombre
-if (!validarCampoTexto($nombre))
-{
+if (!validarCampoTexto($usuario->nombre)){
     $error = true;
     $message = 'El campo nombre es obligatorio y debe contener al menos 3 caracteres.';
 }
 //verificar apellidos
-if (!$error && !validarCampoTexto($apellidos))
-{
+if (!$error && !validarCampoTexto($usuario->apellidos)){
     $error = true;
     $message = 'El campo apellidos es obligatorio y debe contener al menos 3 caracteres.';
 }
 //verificar username
-if (!$error && !validarCampoTexto($username))
-{
+if (!$error && !validarCampoTexto($usuario->username)){
     $error = true;
     $message = 'El campo username es obligatorio y debe contener al menos 3 caracteres.';
 }
 //verificar contrasena
-if (!$error && !empty($contrasena) && !validaContrasena($contrasena))
-{
+if (!$error && !empty($contrasena) && !validaContrasena($usuario->contrasena)){
     $error = true;
     $message = 'La contraseña debe ser compleja.';
 }
-if (!$error)
-{
+if (!$error){
     require_once('../modelo/pdo.php');
-    if (empty($contrasena)) $contrasena = null;
-    $resultado = actualizaUsuario($id, filtraCampo($nombre), filtraCampo($apellidos), filtraCampo($username), $contrasena, $rol);
-    if ($resultado[0])
-    {
+    if (empty($usuario->contrasena)) $usuario->contrasena = null;
+    $resultado = actualizaUsuario($usuario->id, filtraCampo($usuario->nombre), filtraCampo($usuario->apellidos), filtraCampo($usuario->username), $usuario->contrasena, $usuario->rol);
+    if ($resultado[0]){
         $message = 'Usuario actualizado correctamente.';
     }
-    else
-    {
+    else{
         $message = 'Ocurrió un error actualizando el usuario: ' . $resultado[1];
         $error = true;
     }

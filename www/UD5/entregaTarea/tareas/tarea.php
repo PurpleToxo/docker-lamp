@@ -3,6 +3,7 @@
     require_once(__DIR__'/modelo/entity/claseFichero.php');
     require_once(__DIR__'/modelo/entity/claseUsuario.php');
     require_once(__DIR__'/modelo/mysqli.php');
+    require_once ('../modelo/entity/claseTareas.php');
 
     
     // Función para determinar el tipo de archivo y devolver el icono correspondiente
@@ -30,137 +31,129 @@
             
             <?php include_once('../vista/menu.php'); ?>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="container justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h2>Tarea</h2>
-                    <?php include_once ('../vista/erroresSession.php'); ?>
-                </div>
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div class="container justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h2>Tarea</h2>
+                        <?php include_once ('../vista/erroresSession.php'); ?>
+                    </div>
 
-                <div class="container justify-content-between">
+                    <div class="container justify-content-between">
                 <?php
                 require_once('../modelo/mysqli.php');
-                if (!empty($_GET))
-                {
+
+                if (!empty($_GET['id'])){
                     $id = $_GET['id'];
+                    
                     if (!empty($id)) {
-                        if (checkAdmin() || esPropietarioTarea($_SESSION['usuario']['id'], $id))
-                        {
+                        if (checkAdmin() || esPropietarioTarea($_SESSION['usuario']['id'], $id)){
                             $tarea = buscaTarea($id);
                             $usuario = buscaUsuarioMysqli($tarea['id_usuario']);
                             if ($tarea){
                                 $ficheros = $tarea->getId();                                
-                            ?>
+                                ?>
 
-                            <div class="container my-4">
-                                <!-- Información principal -->
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0">Detalles</h5>
+                                <div class="container my-4">
+                                    <!-- Información principal -->
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="mb-0">Detalles</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <strong>Titulo:</strong>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <p class="mb-0"><?php echo $tarea['titulo']; ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <strong>Descripción:</strong>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <p class="mb-0"><?php echo $tarea['descripcion']; ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <strong>Estado:</strong>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <p class="mb-0"><?php echo $tarea['estado']; ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <strong>Usuario:</strong>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <p class="mb-0"><?php echo $usuario['username']; ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col-md-3">
-                                                <strong>Titulo:</strong>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <p class="mb-0"><?php echo $tarea['titulo']; ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-3">
-                                                <strong>Descripción:</strong>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <p class="mb-0"><?php echo $tarea['descripcion']; ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-3">
-                                                <strong>Estado:</strong>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <p class="mb-0"><?php echo $tarea['estado']; ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-3">
-                                                <strong>Usuario:</strong>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <p class="mb-0"><?php echo $usuario['username']; ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Listado de archivos adjuntos -->
-                                <div class="card mt-4">
-                                    <div class="card-header bg-secondary text-white">
-                                        <h5 class="mb-0">Archivos Adjuntos</h5>
-                                    </div>
-                                    <div class="container my-4">
-                                        <div class="row g-3">
-                                            <!-- Tarjeta de archivo -->
-                                            <?php
-                                            foreach ($ficheros as $fichero)
-                                            {
-                                            ?>
-                                                <div class="col-md-4">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title"><i class="<?= getFileIcon($fichero['file']); ?> me-3 fs-4"></i><?php echo $fichero['nombre']; ?> </h5>
-                                                            <p class="card-text text-muted text-truncate"><?php echo $fichero['descripcion']; ?></p>
-                                                            <div class="d-flex gap-2">
-                                                                <a href="../<?php echo $fichero['file']; ?>" class="btn btn-sm btn-outline-primary" download>Descargar</a>
-                                                                <a href="../ficheros/borrar.php?id=<?php echo $fichero['id']; ?>" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                                    <!-- Listado de archivos adjuntos -->
+                                    <div class="card mt-4">
+                                        <div class="card-header bg-secondary text-white">
+                                            <h5 class="mb-0">Archivos Adjuntos</h5>
+                                        </div>
+                                        <div class="container my-4">
+                                            <div class="row g-3">
+                                                <!-- Tarjeta de archivo -->
+                                                <?php
+                                                foreach ($ficheros as $fichero)
+                                                {
+                                                ?>
+                                                    <div class="col-md-4">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title"><i class="<?= getFileIcon($fichero['file']); ?> me-3 fs-4"></i><?php echo $fichero['nombre']; ?> </h5>
+                                                                <p class="card-text text-muted text-truncate"><?php echo $fichero['descripcion']; ?></p>
+                                                                <div class="d-flex gap-2">
+                                                                    <a href="../<?php echo $fichero['file']; ?>" class="btn btn-sm btn-outline-primary" download>Descargar</a>
+                                                                    <a href="../ficheros/borrar.php?id=<?php echo $fichero['id']; ?>" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            <?php
-                                            }
-                                            ?>
-                                            
-                                            <!-- Tarjeta de subir nuevo -->
-                                            <div class="col-md-4">
-                                                <a href="../ficheros/subidaFichForm.php?id=<?php echo $id; ?>" class="text-decoration-none">
-                                                    <div class="card text-center border-dashed h-100">
-                                                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                                            <h5 class="card-title text-primary">
-                                                                <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
-                                                            </h5>
-                                                            <p class="card-text text-muted">Añadir nuevo archivo</p>
+                                                <?php
+                                                }
+                                                ?>
+                                                
+                                                <!-- Tarjeta de subir nuevo -->
+                                                <div class="col-md-4">
+                                                    <a href="../ficheros/subidaFichForm.php?id=<?php echo $id; ?>" class="text-decoration-none">
+                                                        <div class="card text-center border-dashed h-100">
+                                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                                <h5 class="card-title text-primary">
+                                                                    <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
+                                                                </h5>
+                                                                <p class="card-text text-muted">Añadir nuevo archivo</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </a>
+                                                    </a>
+                                                </div>
+
                                             </div>
-
                                         </div>
+
                                     </div>
-
                                 </div>
-                            </div>
 
 
-                            <?php
-                            }
-                            else
-                            {
+                                <?php
+                            } else {
                                 echo '<div class="alert alert-danger" role="alert">No se pudo recuperar la información de la tarea.</div>';
                             }
-                        }
-                        else
-                        {
+                        }else {
                             echo '<div class="alert alert-danger" role="alert">No tienes permisos sobre esta tarea.</div>';
                         }
-                    }
-                    else
-                    {
+                    }else{
                         echo '<div class="alert alert-danger" role="alert">No se pudo recuperar la información de la tarea.</div>';
                     }
-                }
-                else
-                {
+                }else{
                     echo '<div class="alert alert-danger" role="alert">Debes acceder a través del listado de tareas.</div>';
                 }
                 ?>
