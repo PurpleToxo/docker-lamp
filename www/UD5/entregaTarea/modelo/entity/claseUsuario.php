@@ -8,7 +8,7 @@ class User{
     private string $name;
     private string $apellidos;
     private string $contrasena;
-    private boolean $rol;
+    private bool $rol;
 
     //constructor
     function __construct($id, $username, $name, $apellidos, $contrasena, $rol){
@@ -39,14 +39,14 @@ class User{
         $this-> name = $name;
     }
     function getName(){
-        return $this->Name;
+        return $this->name;
     }
 
     function setApellidos($apellidos){
         $this-> apellidos = $apellidos;
     }
     function getApellidos(){
-        return $this->Apellidos;
+        return $this->apellidos;
     }
 
     function setContrasena($contrasena){

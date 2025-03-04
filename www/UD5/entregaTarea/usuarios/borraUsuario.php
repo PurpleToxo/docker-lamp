@@ -1,5 +1,6 @@
 <?php
 require_once('../login/sesiones.php');
+require_once('../modelo/entity/claseUsuario.php');
 if (!checkAdmin()) redirectIndex();
 
 $message = 'Error borrando el usuario.';
@@ -7,29 +8,23 @@ $error = true;
 
 require_once('../modelo/pdo.php');
 
-if (!empty($_GET))
-{
+if (!empty($_GET['id'])){
+    $usuario = new User();
     $id = $_GET['id'];
-    if (!empty($id))
-    {
-        $resultado = borraUsuario($id);
-        if ($resultado[0])
-        {
+
+    if($usuario->buscarUsuario($id)){
+        if($usuario->borrarUsuario()){
             $message = 'Usuario borrado correctamente.';
             $error = false;
-        }
-        else
-        {
+        }else{
             $message = 'No se pudo borrar el usuario.';
         }
-    }
-    else
-    {
+    }else{
         $message = 'No se pudo recuperar la información del usuario.';
     }
+
 }
-else
-{
+else{
     $message = 'Debes acceder a través del listado de usuarios.';
 }
 
