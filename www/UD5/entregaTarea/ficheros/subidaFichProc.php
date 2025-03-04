@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         if (move_uploaded_file($archivo['tmp_name'], '../' . $rutaDestino))
         {
-            require_once('../modelo/pdo.php');
+            require_once('../modelo/entity/claseFicheroDBImp.php');
 
             $resultado = nuevoFichero($rutaDestino, $nombreArchivo, $descripcion, $id_tarea);
 
